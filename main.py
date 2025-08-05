@@ -2,6 +2,26 @@ import random
 
 # new roll format for dice XdN x-how many rolls n-sides per die
 # TODO: Create a logic to select the rolles and sides of the die while adhering to a format
+# format Ndx
+
+print("Welcome to dice roller. You can throw roll dices typing (NdX).")
+print("N- number of throws.")
+print("X- number of dice sides.")
+try:
+    dice_roll_choice = input("Enter dice roll in the format NdX (e.g. 3d6): ")
+    dice_roll_choice = dice_roll_choice.lower().strip()
+
+    if  ('d' not in dice_roll_choice
+        or not dice_roll_choice.split('d')[1].isdigit()
+        or len(dice_roll_choice.split('d')) != 2):
+        raise ValueError(f"This is not respecting the format (NdX) -> {dice_roll_choice}")
+    
+except ValueError as err:
+    print(f"Warning: {err}.")
+
+import sys
+sys.exit()
+
 
 
 # TODO: Create history session logic
