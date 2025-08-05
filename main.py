@@ -55,15 +55,15 @@ while True:
         print(f"You rolled {rolling} ")
         history_stack.append(rolling)
 
-    
-    session[f"d{dice_sides}"] = history_stack
+    # TODO: HISTORY LOGIC FOR a better handling of the data
+
+
+    session['dice_type'] = f"d{dice_sides}"
+    session['rolls'] = history_stack
+    session['total'] = sum(history_stack)
     records.append(session)
 
     print(f"Thank you for rolling.")
-    for i in range(len(history_stack)):
-        print(f"{str(i + 1) + '.Roll: ' + str(history_stack[i])}")
-    total_dice_amount = sum(history_stack)
-    print(f"Your total dice score is: {total_dice_amount}")
 
     ask_again = input("Do you want to roll again (y/n)? ")
     if ask_again.lower() != 'y':
