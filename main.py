@@ -6,7 +6,6 @@ from statistics import mode
 # Records of the dice rolls and storage for save/load logic
 records = []
 
-
 # new roll format for dice XdN x-how many rolls n-sides per die
 # Create a logic to select the rolles and sides of the die while adhering to a format
 # format Ndx
@@ -27,7 +26,10 @@ options = ["Roll dice",
 for idx, option in enumerate(options):
     print(f"{idx + 1}. {option}")
 option_choice = input("Please choose an option: ")
-
+while True:
+    if option_choice == '1':
+        print("You chose Roll Dice")
+    elif option_choice == str(len(options))
 
 
 
