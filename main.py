@@ -3,15 +3,33 @@ from collections import defaultdict
 from datetime import datetime
 from statistics import mode
 
+# Records of the dice rolls and storage for save/load logic
+records = []
+
+
 # new roll format for dice XdN x-how many rolls n-sides per die
 # Create a logic to select the rolles and sides of the die while adhering to a format
 # format Ndx
+print("="*50)
+print("Welcome to a small Dice Roller game!")
+print("You can throw roll dices typing (NdX).")
+print("---- N- number of throws. ----")
+print("---- X- number of dice sides. ----")
+print("="*50)
+# main menu with choices
+options = ["Roll dice",
+           "View roll history",
+           "view Statistics",
+           "Save session",
+           "Load session",
+           "Quit"]
 
-print("Welcome to dice roller. You can throw roll dices typing (NdX).")
-print("N- number of throws.")
-print("X- number of dice sides.")
+for idx, option in enumerate(options):
+    print(f"{idx + 1}. {option}")
+option_choice = input("Please choose an option: ")
 
-records = []
+
+
 
 while True:
     
