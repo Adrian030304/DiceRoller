@@ -1,15 +1,15 @@
 import random
+from collections import defaultdict
+from datetime import datetime
+from statistics import mode
 
 # new roll format for dice XdN x-how many rolls n-sides per die
-# TODO: Create a logic to select the rolles and sides of the die while adhering to a format
+# Create a logic to select the rolles and sides of the die while adhering to a format
 # format Ndx
 
 print("Welcome to dice roller. You can throw roll dices typing (NdX).")
 print("N- number of throws.")
 print("X- number of dice sides.")
-
-# TODO: Create history session logic
-
 
 records = []
 
@@ -55,7 +55,7 @@ while True:
         print(f"You rolled {rolling} ")
         roll_history.append(rolling)
 
-    # TODO: HISTORY LOGIC FOR a better handling of the data
+    # HISTORY LOGIC FOR a better handling of the data
     # To add : name, timestamp
 
     session['dice_type'] = f"d{dice_sides}"
@@ -78,18 +78,39 @@ history_prompt = input("Do you wish to see your throwing history data? (y/n) ").
 if history_prompt == 'y':
     print(f"The records are : ")
     data_string = ''
-    aggregated = {}
     for record in records:
+        roll_time = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         dice_type = record['dice_type']
         rolls = record['rolls']
         total = record['total']
-        data_string += f"{dice_type} -> Rolls: {rolls}, Rolls Total: {total}, Average: {total/len(rolls):.2f} \n" 
-        if dice_type not in aggregated:
-            aggregated[dice_type] = rolls
-        else:
-            aggregated[dice_type].extend(rolls)
+        average_rolls = f"{total/len(rolls):.2f}"
+        data_string += f"| {roll_time} | {dice_type} -> Rolls: {rolls} | Total: {total} | Avg: {average_rolls}\n" 
     print(data_string)
-    
+
+# stats part, to implement a staticical view of the dice rolls along with the aggregated type , also on save/load to 
+
+stats_prompt = input("Do you want to see your throw statistics (y/n)? ").lower().strip()
+if stats_prompt == 'y' and not records:
+    print("The dice are silent... no rolls to show.")
+
+if stats_prompt == 'y':
+
+    aggregate_dices = defaultdict(list)
+    for record in records:
+        aggregate_dices[record['dice_type']].extend(record['rolls'])
+    print(f"Here's a summary of your dice rolling stats so far: ")
+    for agg_dice in aggregate_dices:
+        agg_roll = aggregate_dices[agg_dice]
+        print(f"Dice Type: {agg_dice}")
+        print(f"  Rolls Sum: {sum(agg_roll)}")
+        print(f"  Average Roll: {sum(agg_roll)/len(agg_roll):.2f}")
+        print(f"  Min Rolled number: {min(agg_roll)}")
+        print(f"  Max Rolled number: {max(agg_roll)}")
+        print(f"  Most Frequent rolled number: {mode(agg_roll)}")
+
+    print(f"That's all for your stats — happy rolling!")
+
+
         
 
     
