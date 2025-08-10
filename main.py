@@ -16,7 +16,7 @@ records = []
 while True:
     
     session = {}
-    history_stack = []
+    roll_history = []
 
     while True:
         try:
@@ -53,14 +53,14 @@ while True:
     for _ in range(rolls_amount):
         rolling = random.randint(1,dice_sides)
         print(f"You rolled {rolling} ")
-        history_stack.append(rolling)
+        roll_history.append(rolling)
 
     # TODO: HISTORY LOGIC FOR a better handling of the data
-
+    # To add : name, timestamp
 
     session['dice_type'] = f"d{dice_sides}"
-    session['rolls'] = history_stack
-    session['total'] = sum(history_stack)
+    session['rolls'] = roll_history
+    session['total'] = sum(roll_history)
     records.append(session)
 
     print(f"Thank you for rolling.")
@@ -68,6 +68,29 @@ while True:
     ask_again = input("Do you want to roll again (y/n)? ")
     if ask_again.lower() != 'y':
             break
+
+
+# Your throws : dx, dy, dz
+# total rolls per throw type
+# average rolls 
+
+history_prompt = input("Do you wish to see your throwing history data? (y/n) ").lower().strip()
+if history_prompt == 'y':
+    print(f"The records are : ")
+    data_string = ''
+    aggregated = {}
+    for record in records:
+        dice_type = record['dice_type']
+        rolls = record['rolls']
+        total = record['total']
+        data_string += f"{dice_type} -> Rolls: {rolls}, Rolls Total: {total}, Average: {total/len(rolls):.2f} \n" 
+        if dice_type not in aggregated:
+            aggregated[dice_type] = rolls
+        else:
+            aggregated[dice_type].extend(rolls)
+    print(data_string)
     
-print(f"The records are : {records}")
-history_stack.clear()
+        
+
+    
+
