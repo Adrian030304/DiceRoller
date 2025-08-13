@@ -5,7 +5,6 @@ from datetime import datetime
 from statistics import mode
 
 # Records of the dice rolls and storage for save/load logic
-records = []
 dice_obj = {}
 dice_info = []
 # new roll format for dice XdN x-how many rolls n-sides per die
@@ -47,7 +46,6 @@ while True:
         print("="*50)
 
         while True:
-            session = {}
             roll_history = []
 
             while True:
@@ -88,13 +86,14 @@ while True:
             
             # HISTORY LOGIC FOR a better handling of the data
             # To add : name, timestamp
+    
+            session = {
+                "dice_type": f"d{dice_sides}",
+                "rolls": roll_history,
+                "total": sum(roll_history),
+                "time": datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+            }
 
-            session['dice_type'] = f"d{dice_sides}"
-            session['rolls'] = roll_history
-            session['total'] = sum(roll_history)
-            session['time'] = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-            
-            records.append(session)
             print(f"Thank you for rolling.")
 
             ask_again = input("Do you want to roll again (y/n)? ")
@@ -107,12 +106,12 @@ while True:
 
         for dice_record_dict in dice_info:
             if session_name in dice_record_dict:
-                dice_record_dict[session_name].extend(records)
+                dice_record_dict[session_name].extend(session)
                 found = True
                 break
         if not found:
-            dice_info.append({session_name:records})
-        records = []
+            dice_info.append({session_name:[session]})
+
 
     elif option_choice == '2':
         # Your throws : dx, dy, dz
