@@ -18,8 +18,7 @@ print("You can throw roll dices typing (NdX).")
 print("---- N- number of throws. ----")
 print("---- X- number of dice sides. ----")
 
-# session_name = f"session-{random.randint(1,9999)}"
-session_name = 'session-6809'
+session_name = f"session-{random.randint(1,9999)}"
 
 # main menu with choices
 options = ["Roll dice",
@@ -107,7 +106,6 @@ while True:
         found = False
 
         for dice_record_dict in dice_info:
-            print(f"DICE RECORD DICT {dice_record_dict}")
             if session_name in dice_record_dict:
                 dice_record_dict[session_name].extend(records)
                 found = True
