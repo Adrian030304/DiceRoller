@@ -122,8 +122,8 @@ while True:
         history_prompt = input("Do you wish to see your throwing history data? (y/n) ").lower().strip()
         if history_prompt == 'y':
             print(f"The records are : \n")
-            data_string = ''
-            for record in records:
+            current_info = dice_info[-1]
+            for record in current_info[list(current_info)[-1]]:
                 roll_time = record['time']
                 dice_type = record['dice_type']
                 rolls = record['rolls']
@@ -137,11 +137,12 @@ while True:
         stats_prompt = input("Do you want to see your throw statistics (y/n)? ").lower().strip()
         if stats_prompt != 'y':
             print("Going back to the main menu..")
-        elif not records:
+        elif not dice_info:
             print("The dice are silent... no rolls to show.\n")
         else:
             aggregate_dices = defaultdict(list)
-            for record in records:
+            current_info = dice_info[-1]
+            for record in current_info[list(current_info)[-1]]:
                 aggregate_dices[record['dice_type']].extend(record['rolls'])
             print(f"Here's a summary of your dice rolling stats so far: \n")
             for agg_dice in aggregate_dices:
