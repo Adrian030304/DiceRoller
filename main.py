@@ -1,11 +1,13 @@
-import random
+import random, os, json, time
+from json_actions import save_content, load_content, load_file_exists
 from collections import defaultdict
 from datetime import datetime
 from statistics import mode
 
 # Records of the dice rolls and storage for save/load logic
 records = []
-
+dice_obj = {}
+dice_info = []
 # new roll format for dice XdN x-how many rolls n-sides per die
 # Create a logic to select the rolles and sides of the die while adhering to a format
 # format Ndx
@@ -16,14 +18,26 @@ print("You can throw roll dices typing (NdX).")
 print("---- N- number of throws. ----")
 print("---- X- number of dice sides. ----")
 
+# session_name = f"session-{random.randint(1,9999)}"
+session_name = 'session-6809'
 
 # main menu with choices
 options = ["Roll dice",
            "View roll history",
-           "view Statistics",
+           "View statistics",
            "Save session",
            "Load session",
            "Quit"]
+
+if load_file_exists:
+    print("Welcome back, do you want to load the game from the last save?(y/n)")
+    load_ask = input().lower().strip()
+    if load_ask == 'y':
+        print('Loading...enjoy.')
+        dice_info = load_content()
+    else:
+        print("Starting a new game..")
+
 
 while True:
     print("="*50)
@@ -32,8 +46,8 @@ while True:
     option_choice = input("Please choose an option: ")
     if option_choice == '1':
         print("="*50)
+
         while True:
-    
             session = {}
             roll_history = []
 
@@ -54,7 +68,6 @@ while True:
                     continue
                 break
 
-            print(f"dice_roll_choice {dice_roll_choice}")
             try:
                 rolls_amount, dice_sides = dice_roll_choice.split('d')
                 if int(rolls_amount) < 1 or int(dice_sides) < 1:
@@ -73,7 +86,7 @@ while True:
                 rolling = random.randint(1,dice_sides)
                 print(f"You rolled {rolling} ")
                 roll_history.append(rolling)
-
+            
             # HISTORY LOGIC FOR a better handling of the data
             # To add : name, timestamp
 
@@ -81,23 +94,35 @@ while True:
             session['rolls'] = roll_history
             session['total'] = sum(roll_history)
             session['time'] = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+            
             records.append(session)
-
             print(f"Thank you for rolling.")
 
             ask_again = input("Do you want to roll again (y/n)? ")
             if ask_again.lower() != 'y':
+                    print("Going back to the main menu...")
                     break
             print("="*50)
+
+        found = False
+
+        for dice_record_dict in dice_info:
+            print(f"DICE RECORD DICT {dice_record_dict}")
+            if session_name in dice_record_dict:
+                dice_record_dict[session_name].extend(records)
+                found = True
+                break
+        if not found:
+            dice_info.append({session_name:records})
+        records = []
 
     elif option_choice == '2':
         # Your throws : dx, dy, dz
         # total rolls per throw type
         # average rolls 
-
         history_prompt = input("Do you wish to see your throwing history data? (y/n) ").lower().strip()
         if history_prompt == 'y':
-            print(f"The records are : ")
+            print(f"The records are : \n")
             data_string = ''
             for record in records:
                 roll_time = record['time']
@@ -107,9 +132,9 @@ while True:
                 average_rolls = f"{total/len(rolls):.2f}"
                 data_string += f"| {roll_time} | {dice_type} -> Rolls: {rolls} | Total: {total} | Avg: {average_rolls}\n" 
             print(data_string)
+
     elif option_choice == '3':
         # stats part, to implement a staticical view of the dice rolls along with the aggregated type , also on save/load to 
-
         stats_prompt = input("Do you want to see your throw statistics (y/n)? ").lower().strip()
         if stats_prompt != 'y':
             print("Going back to the main menu..")
@@ -131,6 +156,17 @@ while True:
             print(f"That's all for your stats — happy rolling!")
             print('='*50)
 
+    elif option_choice == '4':
+        # save
+        print("Game progress saved..")
+        time.sleep(1)
+        save_content(dice_info)
+
+    elif option_choice == '5':
+        # load mechanic
+        print("Loading game progress..")
+        time.sleep(1)
+        dice_info = load_content()
     elif option_choice == str(len(options)):
         print("Quitting...")
         break
